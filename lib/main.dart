@@ -17,13 +17,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String input;
+  String input2;
   List todos = List();
 
   createTodos() {
     DocumentReference documentReference =
         Firestore.instance.collection("MyTodos").document(input);
+    /*DocumentReference documentReference2 =
+        Firestore.instance.collection("MyTodos2").document(input2);*/
 
-    Map<String, String> todos = {"todoTitle": input};
+    Map<String, String> todos = {"todoTitle": input/*, "todoTitle2": input2*/};
     documentReference
         .setData(todos)
         .whenComplete(() => {print("$input created")});
@@ -73,10 +76,24 @@ class _MyAppState extends State<MyApp> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text("Görev Ekle"),
-                    content: TextField(
-                      onChanged: (String value) {
-                        input = value;
-                      },
+                    content: Container(
+                      height: 100,
+                      child: Column(
+                        children: [
+                          TextField(
+                            onChanged: (String value) {
+                              input = value;
+                            },
+                          ),
+                          /*Flexible(
+                            child: TextField(
+                              onChanged: (String value) {
+                                input2 = value;
+                              },
+                            ),
+                          ),*/
+                        ],
+                      ),
                     ),
                     actions: [
                       FlatButton(
@@ -107,7 +124,9 @@ class _MyAppState extends State<MyApp> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15)),
                   child: ListTile(
+                    leading: Icon(Icons.calendar_today),
                     title: Text(documentSnapshot.data()["todoTitle"]),
+                    /*subtitle: Text(documentSnapshot.data()["todoTitle2"]),*/
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
                       color: Colors.red,
